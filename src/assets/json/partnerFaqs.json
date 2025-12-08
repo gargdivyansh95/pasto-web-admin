@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "question": "How can I become a partner?",
+        "answer": "Download the Partner App, sign up, and submit your restaurant details for verification and approval."
+    },
+    {
+        "id": 2,
+        "question": "How do I update my menu?",
+        "answer": "Log in to the Partner App and update your menu items, pricing, and availability at any time."
+    },
+    {
+        "id": 3,
+        "question": "Who is responsible for delivery?",
+        "answer": "Partner restaurants are fully responsible for delivering their own orders. Pastō does not provide delivery services."
+    },
+    {
+        "id": 4,
+        "question": "How do I receive payments?",
+        "answer": "Currently, only cash on delivery is available. Restaurants collect cash directly from customers."
+    },
+    {
+        "id": 5,
+        "question": "How can I contact support?",
+        "answer": "For assistance, partners can email support@pasto.in"
+    },
+    {
+        "id": 6,
+        "question": "How can I deactivate my account?",
+        "answer": "In the Partner App, go to Settings > Account > Deactivate or email support to request account deactivation."
+    }
+]

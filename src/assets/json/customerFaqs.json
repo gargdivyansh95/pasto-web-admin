@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "question": "What is Pasto?",
+        "answer": "Pasto is a food delivery platform that connects customers with partner restaurants. Customers can browse menus, place orders, and get food delivered directly through the Pasto Customer App at original price."
+    },
+    {
+        "id": 2,
+        "question": "How can I make a payment?",
+        "answer": "At present, only cash on delivery is accepted. Online payments may be added in future updates."
+    },
+    {
+        "id": 3,
+        "question": "How is my order delivered?",
+        "answer": "Each restaurant is responsible for its own deliveries. Pastō does not manage delivery operations."
+    },
+    {
+        "id": 4,
+        "question": "Can I cancel my order?",
+        "answer": "Orders can only be canceled by contacting the restaurant directly. Pastō does not process cancellations."
+    },
+    {
+        "id": 5,
+        "question": "How can I contact support?",
+        "answer": "You can reach out via email at support@pasto.in for any queries or assistance."
+    }
+]
