@@ -7,6 +7,7 @@ import { RestaurantTable, RestaurantTableSkeleton } from "./components";
 import { restaurantsActions } from "./restaurants.action";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
 
 export const Restaurants = () => {
 
@@ -17,6 +18,7 @@ export const Restaurants = () => {
     const [loadingMore, setLoadingMore] = useState(false);
     const [restaurantList, setRestaurantList] = useState([]);
     const [lastDoc, setLastDoc] = useState(null);
+    const [hasMore, setHasMore] = useState(true);
 
     const getStatusByTab = (index) => {
         if (index === 'pending') return null
@@ -35,13 +37,14 @@ export const Restaurants = () => {
                     return lastDocId
                         ? {
                             restaurants: [...(prev.restaurants || []), ...newRestaurants],
-                            hasMore: response.data?.hasMore
+                            // hasMore: response.data?.hasMore
                         }
                         : {
                             restaurants: newRestaurants,
-                            hasMore: response.data?.hasMore
+                            // hasMore: response.data?.hasMore
                         };
                 });
+                    setHasMore(response.data?.hasMore);
                     setLastDoc(response.data?.lastVisible);
                     setLoading(false);
                     setLoadingMore(false);
@@ -61,7 +64,7 @@ export const Restaurants = () => {
     }, [dispatch, tabIndex]);
 
     const handleLoadMore = () => {
-        if (!restaurantList?.hasMore) return;
+        if (!hasMore) return;
         setLoadingMore(true);
         fetchRestaurantList(getStatusByTab(tabIndex), lastDoc);
     };
@@ -81,14 +84,14 @@ export const Restaurants = () => {
                     ) : (
                         <RestaurantTable restaurantList={restaurantList?.restaurants || []} />
                     )}
-                    {!loading && restaurantList?.hasMore && (
+                    {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
-                            <button
-                                className="px-4 py-2 bg-brand-green text-white rounded"
+                            <Button
+                                className="px-4 py-2 bg-brand-green text-white rounded hover:bg-brand-green-hover cursor-pointer"
                                 onClick={handleLoadMore}
                             >
                                 {loadingMore ? "Loading..." : "Load More"}
-                            </button>
+                            </Button>
                         </div>
                     )}
                 </TabsContent>
@@ -98,14 +101,14 @@ export const Restaurants = () => {
                     ) : (
                         <RestaurantTable restaurantList={restaurantList?.restaurants || []} />
                     )}
-                    {!loading && restaurantList?.hasMore && (
+                    {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
-                            <button
-                                className="px-4 py-2 bg-brand-green text-white rounded"
+                            <Button
+                                className="px-4 py-2 bg-brand-green text-white rounded hover:bg-brand-green-hover cursor-pointer"
                                 onClick={handleLoadMore}
                             >
                                 {loadingMore ? "Loading..." : "Load More"}
-                            </button>
+                            </Button>
                         </div>
                     )}
                 </TabsContent>
@@ -115,14 +118,14 @@ export const Restaurants = () => {
                     ) : (
                         <RestaurantTable restaurantList={restaurantList?.restaurants || []} />
                     )}
-                    {!loading && restaurantList?.hasMore && (
+                    {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
-                            <button
-                                className="px-4 py-2 bg-brand-green text-white rounded"
+                            <Button
+                                className="px-4 py-2 bg-brand-green text-white rounded hover:bg-brand-green-hover cursor-pointer"
                                 onClick={handleLoadMore}
                             >
                                 {loadingMore ? "Loading..." : "Load More"}
-                            </button>
+                            </Button>
                         </div>
                     )}
                 </TabsContent>
