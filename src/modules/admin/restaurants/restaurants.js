@@ -74,9 +74,9 @@ export const Restaurants = () => {
             <h1 className="text-3xl font-bold mb-6 mt-2">Restaurants</h1>
             <Tabs value={tabIndex} onValueChange={setTabIndex} className="w-full">
                 <TabsList className="flex justify-center gap-6 h-12">
-                    <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base" value="pending">Pending Restaurants</TabsTrigger>
-                    <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base" value="approved">Approved Restaurants</TabsTrigger>
-                    <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base" value="rejected">Rejected Restaurants</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="pending">Pending Restaurants</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="approved">Approved Restaurants</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="rejected">Rejected Restaurants</TabsTrigger>
                 </TabsList>
                 <TabsContent value="pending" className="mt-5">
                     {loading ? (
