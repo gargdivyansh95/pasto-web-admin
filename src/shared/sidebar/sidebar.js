@@ -65,7 +65,7 @@ export default function AppSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link
                                             href={item.href}
-                                            className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium
+                                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium
                                                 ${isActive ? "bg-brand-orange text-white" : "text-black hover:bg-gray-200"}`}
                                         >
                                             <item.icon size={20} />
