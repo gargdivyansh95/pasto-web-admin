@@ -34,14 +34,14 @@ export default function RestaurantTable({ restaurantList }) {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Owner Name</TableHead>
-                        <TableHead>Restaurant Name</TableHead>
-                        <TableHead>Primary Number</TableHead>
-                        <TableHead>Secondary Number</TableHead>
-                        <TableHead>Address</TableHead>
-                        <TableHead>Onboarding Status</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Action</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Owner Name</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Restaurant Name</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Primary Number</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Secondary Number</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Address</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Onboarding Status</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Status</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Action</TableHead>
                     </TableRow>
                 </TableHeader>
 
@@ -49,29 +49,17 @@ export default function RestaurantTable({ restaurantList }) {
                     {restaurantList.map((item, index) => (
                         <TableRow key={index}>
                             <TableCell>{item?.ownerName}</TableCell>
-
                             <TableCell>{item?.restaurantName}</TableCell>
-
                             <TableCell>{item?.user?.phoneNumber}</TableCell>
-
                             <TableCell>
-                                {item?.contactNumbers?.length > 0
-                                    ? item.contactNumbers.map((n) => n.number).join(", ")
-                                    : "N/A"}
+                                {item?.contactNumbers?.length > 0 ? item.contactNumbers.map((n) => n.number).join(", ") : "N/A"}
                             </TableCell>
-
                             <TableCell>{getAddress(item?.addressDetails)}</TableCell>
-
                             <TableCell>
-                                {item?.user?.achievement === 2
-                                    ? "Restaurant Menu Pending"
-                                    : "Completed"}
+                                {item?.user?.achievement === 2 ? "Restaurant Menu Pending" : "Completed"}
                             </TableCell>
-
-                            {/* STATUS BUTTON */}
                             <TableCell>
-                                <Button
-                                    variant={item?.status === "ACTIVE" ? "default" : "destructive"}
+                                <Button className={`text-white cursor-pointer ${item?.status === "ACTIVE" ? "bg-brand-green hover:bg-brand-green-hover" : "bg-brand-red hover:bg-brand-red-hover"}`}
                                 //   onClick={() =>
                                 //     handleActive(
                                 //       item.restaurantId,
@@ -82,10 +70,8 @@ export default function RestaurantTable({ restaurantList }) {
                                     {item?.status}
                                 </Button>
                             </TableCell>
-
-                            {/* VERIFY BUTTON */}
                             <TableCell>
-                                <Button
+                                <Button className="cursor-pointer text-white hover:text-white bg-brand-orange hover:bg-brand-orange-hover"
                                     variant="outline"
                                     disabled={item?.user?.achievement !== 3}
                                 //   onClick={() => handleVerify(item.restaurantId)}
