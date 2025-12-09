@@ -48,7 +48,7 @@ export const Restaurants = () => {
                 }
             },
             (error) => {
-                toast.error(error.error || "Restaurants API failed");
+                toast.error(error.error || "Fetch Restaurants API failed");
                 setLoading(false);
                 setLoadingMore(false);
             }

@@ -13,7 +13,7 @@ export function* getAllRestaurants(action) {
             action.onError(response.data);
         }
     } catch (error) {
-        console.error('Dashboard Saga Counts Error:', error);
+        console.error('Fetch Restaurants Error:', error);
         action.onError(error.response.data);
     }
 }
