@@ -43,28 +43,26 @@ export const Dashboard = () => {
     ];
 
     return (
-        <div className="flex">
-            <div className="flex-1">
-                <h1 className="text-3xl font-bold mb-6 mt-2">Dashboard</h1>
-                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 md:grid-cols-3 gap-6">
-                    {loading
-                        ? Array.from({ length: 6 }).map((_, i) => (
-                            <Skeleton key={i} className="h-28 w-full rounded-lg" />
-                        ))
-                        : cards.map((item, i) => (
-                            <Card
-                                key={i}
-                                className={`shadow-md border-none text-center rounded-lg text-lg py-4 gap-2 ${item.color}`}
-                            >
-                                <CardHeader>
-                                    <CardTitle>{item.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-3xl font-bold">{item.value || 0}</p>
-                                </CardContent>
-                            </Card>
-                        ))}
-                </div>
+        <div>
+            <h1 className="text-3xl font-bold mb-6 mt-2">Dashboard</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 md:grid-cols-3 gap-6">
+                {loading
+                    ? Array.from({ length: 6 }).map((_, i) => (
+                        <Skeleton key={i} className="h-28 w-full rounded-lg" />
+                    ))
+                    : cards.map((item, i) => (
+                        <Card
+                            key={i}
+                            className={`shadow-md border-none text-center rounded-lg text-lg py-4 gap-2 ${item.color}`}
+                        >
+                            <CardHeader>
+                                <CardTitle>{item.title}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-3xl font-bold">{item.value || 0}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
             </div>
         </div>
     );

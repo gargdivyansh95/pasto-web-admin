@@ -1,8 +1,9 @@
 import { Home } from "./website";
-import { Login, Dashboard } from "./admin";
+import { Login, Dashboard, Restaurants } from "./admin";
 
 export {
     Home,
     Login,
     Dashboard,
+    Restaurants,
 }
