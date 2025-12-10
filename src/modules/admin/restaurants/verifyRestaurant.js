@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VerifyRestaurantSchema } from "@/validations";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const VerifyRestaurant = ({ restaurantId }) => {
 
@@ -35,7 +36,7 @@ export const VerifyRestaurant = ({ restaurantId }) => {
 
     const dispatch = useDispatch();
     const authState = useSelector(state => state.auth);
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [restaurant, setRestaurant] = useState({});
     const [restaurantDocs, setRestaurantDocs] = useState(null);
@@ -51,8 +52,6 @@ export const VerifyRestaurant = ({ restaurantId }) => {
             },
             (error) => {
                 toast.error(error.error || "Fetch Restaurants API failed");
-                // setLoading(false);
-                // setLoadingMore(false);
             }
         )
         );
@@ -65,7 +64,7 @@ export const VerifyRestaurant = ({ restaurantId }) => {
                 if (response.success === true) {
                     const latestDocs = {};
                     const rejectDocs = [];
-                    console.log(response, 'rest docsssss')
+
                     // group by docType
                     const grouped = response?.data.reduce((acc, doc) => {
                         if (!acc[doc.docType]) acc[doc.docType] = [];
@@ -96,15 +95,12 @@ export const VerifyRestaurant = ({ restaurantId }) => {
                             }
                         });
                     });
-
                     setRestaurantDocs(latestDocs);
                     setRejectedDocs(rejectDocs);
                 }
             },
             (error) => {
                 toast.error(error.error || "Fetch Restaurants API failed");
-                // setLoading(false);
-                // setLoadingMore(false);
             }
         )
         );
@@ -150,7 +146,6 @@ export const VerifyRestaurant = ({ restaurantId }) => {
                     setIsSubmitting(false);
                 }
             ));
-            console.log(doc.id, updatedData, restaurantId, allDocsValid);
         }
     };
 
@@ -164,19 +159,33 @@ export const VerifyRestaurant = ({ restaurantId }) => {
                             <CardTitle className="text-xl font-bold">Restaurant Details</CardTitle>
                         </CardHeader>
                         <CardContent className="px-0">
-                            <Image src={restaurant?.restaurantLogo || NoImage} width={140} height={140} alt="Restaurant" className="rounded-md border" />
-                            <DetailCard label="Owner Name" value={restaurant?.ownerName} />
-                            <DetailCard label="Restaurant Name" value={restaurant?.restaurantName} />
-                            <DetailCard label="Primary Number" value={restaurant?.user?.phoneNumber} />
-                            <DetailCard label="Secondary Number" value={restaurant?.contactNumbers?.map((n) => n.number).join(", ")} />
-                            <DetailCard label="Address" value={getAddress(restaurant?.addressDetails)} />
-                            <DetailCard label="Opening Time" value={getOpeningTime(restaurant?.openingHours)} />
-                            <DetailCard label="Food Type" value={restaurant?.foodTypeServe?.map((food) => food.label).join(", ")} />
-                            <DetailCard label="Cuisines" value={restaurant?.cuisines?.map(item => item.label).join(', ')} />
-                            <DetailCard label="Restaurant Type" value={restaurant?.restaurantType?.map(item => item.label).join(', ')} />
-                            <DetailCard label="Delievery Range" value={restaurant?.deliveryRange?.label} />
-                            <DetailCard label="Delievery Rules" value={restaurant?.deliveryRules?.map(item => `${item?.range?.label} : ₹${item?.price}`).join(', ')} />
-                            <DetailCard label="Status" value={restaurant.status} />
+                            {!restaurant?.restaurantName ? (
+                                <div className="space-y-4">
+                                    <Skeleton className="h-36 w-36 rounded-md" />
+                                    {
+                                        Array.from({ length: 6 }).map((_, i) => (
+                                            <Skeleton key={i} className="h-8 w-100" />
+                                        ))
+                                    }
+                                </div>
+                            ) : (
+                                <>
+                                    <Image src={restaurant?.restaurantLogo || NoImage} width={140} height={140} alt="Restaurant" className="rounded-md border" />
+                                    <DetailCard label="Owner Name" value={restaurant?.ownerName} />
+                                    <DetailCard label="Restaurant Name" value={restaurant?.restaurantName} />
+                                    <DetailCard label="Primary Number" value={restaurant?.user?.phoneNumber} />
+                                    <DetailCard label="Secondary Number" value={restaurant?.contactNumbers?.map((n) => n.number).join(", ")} />
+                                    <DetailCard label="Address" value={getAddress(restaurant?.addressDetails)} />
+                                    <DetailCard label="Opening Time" value={getOpeningTime(restaurant?.openingHours)} />
+                                    <DetailCard label="Food Type" value={restaurant?.foodTypeServe?.map((food) => food.label).join(", ")} />
+                                    <DetailCard label="Cuisines" value={restaurant?.cuisines?.map(item => item.label).join(', ')} />
+                                    <DetailCard label="Restaurant Type" value={restaurant?.restaurantType?.map(item => item.label).join(', ')} />
+                                    <DetailCard label="Delievery Range" value={restaurant?.deliveryRange?.label} />
+                                    <DetailCard label="Delievery Rules" value={restaurant?.deliveryRules?.map(item => `${item?.range?.label} : ₹${item?.price}`).join(', ')} />
+                                    <DetailCard label="Status" value={restaurant.status} />
+                                </>
+                            )}
+
                         </CardContent>
                     </Card>
                     <Card className="mt-6 py-4 px-4 gap-1">
@@ -214,8 +223,14 @@ export const VerifyRestaurant = ({ restaurantId }) => {
                             const doc = restaurantDocs?.[key];
                             const validation = watch(key);
                             return (
-                                <TabsContent key={key} value={key} className="mt-6">
-                                    {doc ? (
+                                <TabsContent key={key} value={key} className="mt-4">
+                                    {!restaurantDocs ? (
+                                        <div className="space-y-4">
+                                            <Skeleton className="h-6 w-40" />
+                                            <Skeleton className="h-10 w-full" />
+                                            <Skeleton className="h-96 w-full rounded-md" />
+                                        </div>
+                                    ) : doc ? (
                                         <>
                                             <div className="flex items-center gap-3">
                                                 <p className="font-medium">Is this document valid?</p>
