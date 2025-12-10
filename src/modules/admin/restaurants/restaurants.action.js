@@ -3,6 +3,7 @@ export const actionTypes = {
     FetchRestaurantsSuccess: '[Restaurants] Fetch Restaurant Counts Success Action',
     FetchRestaurantById: '[Restaurants] Fetch Restaurant By Id Action',
     FetchRestaurantDocuments: '[Restaurants] Fetch Restaurant Documents Action',
+    UpdateRestaurantDocuments: '[Restaurants] Update Restaurant Documents Action',
 };
 
 export const restaurantsActions = {
@@ -10,4 +11,5 @@ export const restaurantsActions = {
     fetchRestaurantsSuccess: (payload) => ({ type: actionTypes.FetchRestaurantsSuccess, payload }),
     fetchRestaurantById: (payload, onSuccess, onError) => ({ type: actionTypes.FetchRestaurantById, payload, onSuccess, onError }),
     fetchRestaurantDocuments: (payload, onSuccess, onError) => ({ type: actionTypes.FetchRestaurantDocuments, payload, onSuccess, onError }),
+    updateRestaurantDocuments: (payload, onSuccess, onError) => ({ type: actionTypes.UpdateRestaurantDocuments, payload, onSuccess, onError }),
 };

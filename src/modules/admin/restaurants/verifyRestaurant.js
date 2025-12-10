@@ -11,7 +11,7 @@ import NoImage from "../../../assets/images/no-image.jpg";
 import { DetailCard } from "./components";
 import { restaurantsActions } from "./restaurants.action";
 import { toast } from "sonner";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VerifyRestaurantSchema } from "@/validations";
@@ -34,7 +34,9 @@ export const VerifyRestaurant = ({ restaurantId }) => {
     };
 
     const dispatch = useDispatch();
+    const authState = useSelector(state => state.auth);
     const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [restaurant, setRestaurant] = useState({});
     const [restaurantDocs, setRestaurantDocs] = useState(null);
     const [rejectedDocs, setRejectedDocs] = useState([]);
@@ -118,8 +120,38 @@ export const VerifyRestaurant = ({ restaurantId }) => {
     const getOpeningTime = (d) => `${d?.startTime} - ${d?.endTime}`;
 
     const onSubmit = (data) => {
-        console.log("FINAL VERIFIED DATA:", data);
-        toast.success("Validation Submitted Successfully!");
+        const allDocsValid = Object.values(data).every(v => v.isValid);
+        for (const [key, doc] of Object.entries(restaurantDocs)) {
+            const validation = data[key];
+            if (!validation) continue;
+            const updatedData = {
+                status: validation.isValid ? 3 : 2,
+                reason: validation.isValid ? null : validation.reason,
+                processedBy: authState?.user?.email,
+            };
+            const payload = {
+                docId: doc.id,
+                data: updatedData,
+                restaurantId: restaurantId,
+                allDocsValid: allDocsValid,
+            }
+            setIsSubmitting(true);
+            dispatch(restaurantsActions.updateRestaurantDocuments(
+                payload,
+                (response) => {
+                    if (response.success === true) {
+                        toast.success(response.message);
+                        setIsSubmitting(false);
+                        fetchRestaurantDocuments();
+                    }
+                },
+                (error) => {
+                    toast.error(error.error || "Update Restaurant Document API failed");
+                    setIsSubmitting(false);
+                }
+            ));
+            console.log(doc.id, updatedData, restaurantId, allDocsValid);
+        }
     };
 
     return (
@@ -233,8 +265,8 @@ export const VerifyRestaurant = ({ restaurantId }) => {
             </div>
             <div className="flex justify-end mt-1 mb-5">
                 <Button className="bg-brand-orange hover:bg-brand-orange-hover text-white py-6 text-base font-semibold rounded-lg disabled:opacity-50 cursor-pointer w-50"
-                    type="submit" onClick={handleSubmit(onSubmit)}>
-                    Submit
+                    type="submit" onClick={handleSubmit(onSubmit)} disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting..." : "Submit"}
                 </Button>
             </div>
         </form>
