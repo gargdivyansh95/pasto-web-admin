@@ -33,8 +33,24 @@ export function* getRestaurantById(action) {
     }
 }
 
+export function* getRestaurantDocuments(action) {
+    const { restaurantId } = action.payload;
+    try {
+        const response = yield call(axios.get, `/api/admin/restaurants/${restaurantId}/documents`);
+        if (response.status === 200) {
+            action.onSuccess(response.data);
+        } else {
+            action.onError(response.data);
+        }
+    } catch (error) {
+        console.error('Fetch Restaurants Error:', error);
+        action.onError(error.response.data);
+    }
+}
+
 // Watcher saga
 export function* saga() {
     yield takeLatest(actionTypes.FetchRestaurants, getAllRestaurants);
     yield takeLatest(actionTypes.FetchRestaurantById, getRestaurantById);
+    yield takeLatest(actionTypes.FetchRestaurantDocuments, getRestaurantDocuments);
 }

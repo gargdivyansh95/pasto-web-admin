@@ -9,13 +9,13 @@ import { useDispatch } from "react-redux";
 import { authActions } from "./auth.action";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import LoginSchema from "@/validations/Login.schema";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { LoginSchema } from "@/validations";
 
 
 export const Login = () => {
@@ -115,7 +115,7 @@ export const Login = () => {
                         <Button
                             type="submit"
                             disabled={loading}
-                            className="w-full mt-10 bg-orange-600 hover:bg-orange-700 text-white py-6 text-lg rounded-lg disabled:opacity-50 cursor-pointer"
+                            className="w-full mt-10 bg-brand-orange hover:bg-brand-orange-hover text-white py-6 text-lg rounded-lg disabled:opacity-50 cursor-pointer"
                         >
                             {loading ? "Logging in..." : "Login"}
                         </Button>
