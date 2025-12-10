@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { RestaurantTable, RestaurantTableSkeleton } from "./components";
 import { restaurantsActions } from "./restaurants.action";
 import { toast } from "sonner";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 
 export const Restaurants = () => {
@@ -82,7 +82,7 @@ export const Restaurants = () => {
                     {loading ? (
                         <RestaurantTableSkeleton />
                     ) : (
-                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} />
+                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} isPending={true} />
                     )}
                     {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
@@ -99,7 +99,7 @@ export const Restaurants = () => {
                     {loading ? (
                         <RestaurantTableSkeleton />
                     ) : (
-                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} />
+                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} isPending={false} />
                     )}
                     {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
@@ -116,7 +116,7 @@ export const Restaurants = () => {
                     {loading ? (
                         <RestaurantTableSkeleton />
                     ) : (
-                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} />
+                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} isPending={false} />
                     )}
                     {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
