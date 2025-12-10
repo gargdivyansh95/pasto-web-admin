@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function RestaurantTable({ restaurantList, isPending }) {
+export default function RestaurantTable({ restaurantList, isPending, handleVerify }) {
 
     const getAddress = (data) => {
         return `${data?.address}, ${data?.area}, ${data?.city}, ${data?.state}, ${data?.pincode}`;
@@ -74,7 +74,7 @@ export default function RestaurantTable({ restaurantList, isPending }) {
                                 <Button className="cursor-pointer text-white hover:text-white bg-brand-orange hover:bg-brand-orange-hover"
                                     variant="outline"
                                     disabled={isPending ? item?.user?.achievement !== 3 : false}
-                                //   onClick={() => handleVerify(item.restaurantId)}
+                                    onClick={isPending ? () => handleVerify(item.restaurantId) : null}
                                 >
                                     {isPending ? "Verify" : "View"}
                                 </Button>

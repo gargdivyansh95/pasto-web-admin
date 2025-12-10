@@ -69,6 +69,10 @@ export const Restaurants = () => {
         fetchRestaurantList(getStatusByTab(tabIndex), lastDoc);
     };
 
+    const handleVerify = (restaurantId) => {
+        router.push(`/admin/restaurants/verify-restaurant/${restaurantId}`);
+    };
+
     return (
         <div>
             <h1 className="text-3xl font-bold mb-6 mt-2">Restaurants</h1>
@@ -82,7 +86,7 @@ export const Restaurants = () => {
                     {loading ? (
                         <RestaurantTableSkeleton />
                     ) : (
-                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} isPending={true} />
+                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} isPending={true} handleVerify={handleVerify} />
                     )}
                     {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
