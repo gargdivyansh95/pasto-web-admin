@@ -62,10 +62,26 @@ export function* postRestaurantDocuments(action) {
     }
 }
 
+export function* postRestaurantStatus(action) {
+    const { restaurantId } = action.payload;
+    try {
+        const response = yield call(axios.patch, `/api/admin/restaurants/${restaurantId}/status`, action.payload);
+        if (response.status === 200) {
+            action.onSuccess(response.data);
+        } else {
+            action.onError(response.data);
+        }
+    } catch (error) {
+        console.error('Post Restaurants Documents Error:', error);
+        action.onError(error.response.data);
+    }
+}
+
 // Watcher saga
 export function* saga() {
     yield takeLatest(actionTypes.FetchRestaurants, getAllRestaurants);
     yield takeLatest(actionTypes.FetchRestaurantById, getRestaurantById);
     yield takeLatest(actionTypes.FetchRestaurantDocuments, getRestaurantDocuments);
     yield takeLatest(actionTypes.UpdateRestaurantDocuments, postRestaurantDocuments);
+    yield takeLatest(actionTypes.UpdateRestaurantStatus, postRestaurantStatus);
 }

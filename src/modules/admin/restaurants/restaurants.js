@@ -69,8 +69,28 @@ export const Restaurants = () => {
         fetchRestaurantList(getStatusByTab(tabIndex), lastDoc);
     };
 
+    const handleUpdateStatus = (restaurantId, status) => {
+        dispatch(restaurantsActions.updateRestaurantStatus(
+            {restaurantId, status},
+            (response) => {
+                if (response.success === true) {
+                    fetchRestaurantList(getStatusByTab(tabIndex), null);
+                    toast.success(response.message);
+                }
+            },
+            (error) => {
+                toast.error(error.error || "Update Restaurant Status API failed");
+            }
+        )
+        );
+    };
+
     const handleVerify = (restaurantId) => {
         router.push(`/admin/restaurants/verify-restaurant/${restaurantId}`);
+    };
+
+    const handleView = (restaurantId) => {
+        console.log('first', restaurantId)
     };
 
     return (
@@ -86,7 +106,11 @@ export const Restaurants = () => {
                     {loading ? (
                         <RestaurantTableSkeleton />
                     ) : (
-                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} isPending={true} handleVerify={handleVerify} />
+                        <RestaurantTable
+                            restaurantList={restaurantList?.restaurants || []}
+                            isPending={true} onClick={handleVerify}
+                            handleUpdateStatus={handleUpdateStatus}
+                        />
                     )}
                     {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
@@ -103,7 +127,11 @@ export const Restaurants = () => {
                     {loading ? (
                         <RestaurantTableSkeleton />
                     ) : (
-                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} isPending={false} />
+                        <RestaurantTable
+                            restaurantList={restaurantList?.restaurants || []}
+                            isPending={false} onClick={handleView}
+                            handleUpdateStatus={handleUpdateStatus}
+                        />
                     )}
                     {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
@@ -120,7 +148,11 @@ export const Restaurants = () => {
                     {loading ? (
                         <RestaurantTableSkeleton />
                     ) : (
-                        <RestaurantTable restaurantList={restaurantList?.restaurants || []} isPending={false} />
+                        <RestaurantTable
+                            restaurantList={restaurantList?.restaurants || []}
+                            isPending={false} onClick={handleView}
+                            handleUpdateStatus={handleUpdateStatus}
+                        />
                     )}
                     {!loading && hasMore && (
                         <div className="flex justify-center mt-6">

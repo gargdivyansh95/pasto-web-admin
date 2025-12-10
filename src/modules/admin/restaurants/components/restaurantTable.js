@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function RestaurantTable({ restaurantList, isPending, handleVerify }) {
+export default function RestaurantTable({ restaurantList, isPending, onClick, handleUpdateStatus }) {
 
     const getAddress = (data) => {
         return `${data?.address}, ${data?.area}, ${data?.city}, ${data?.state}, ${data?.pincode}`;
@@ -60,12 +60,7 @@ export default function RestaurantTable({ restaurantList, isPending, handleVerif
                             </TableCell>
                             <TableCell>
                                 <Button className={`text-white cursor-pointer ${item?.status === "ACTIVE" ? "bg-brand-green hover:bg-brand-green-hover" : "bg-brand-red hover:bg-brand-red-hover"}`}
-                                //   onClick={() =>
-                                //     handleActive(
-                                //       item.restaurantId,
-                                //       item?.status === "ACTIVE" ? "INACTIVE" : "ACTIVE"
-                                //     )
-                                //   }
+                                  onClick={() => handleUpdateStatus(item.restaurantId, item?.status === "ACTIVE" ? "INACTIVE" : "ACTIVE")}
                                 >
                                     {item?.status}
                                 </Button>
@@ -74,7 +69,7 @@ export default function RestaurantTable({ restaurantList, isPending, handleVerif
                                 <Button className="cursor-pointer text-white hover:text-white bg-brand-orange hover:bg-brand-orange-hover"
                                     variant="outline"
                                     disabled={isPending ? item?.user?.achievement !== 3 : false}
-                                    onClick={isPending ? () => handleVerify(item.restaurantId) : null}
+                                    onClick={() => onClick(item.restaurantId)}
                                 >
                                     {isPending ? "Verify" : "View"}
                                 </Button>

@@ -36,7 +36,6 @@ export const VerifyRestaurant = ({ restaurantId }) => {
 
     const dispatch = useDispatch();
     const authState = useSelector(state => state.auth);
-    // const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [restaurant, setRestaurant] = useState({});
     const [restaurantDocs, setRestaurantDocs] = useState(null);
