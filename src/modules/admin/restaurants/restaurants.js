@@ -90,7 +90,7 @@ export const Restaurants = () => {
     };
 
     const handleView = (restaurantId) => {
-        console.log('first', restaurantId)
+        router.push(`/admin/restaurants/view-restaurant/${restaurantId}`);
     };
 
     return (
