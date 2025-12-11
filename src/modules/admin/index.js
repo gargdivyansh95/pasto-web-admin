@@ -3,6 +3,7 @@ import { Dashboard } from "./dashboard/dashboard";
 import { Restaurants } from "./restaurants/restaurants";
 import { VerifyRestaurant } from "./restaurants/verifyRestaurant";
 import { ViewRestaurant } from "./restaurants/viewRestaurants";
+import { Orders } from "./orders/orders";
 
 export {
     Login,
@@ -10,4 +11,5 @@ export {
     Restaurants,
     VerifyRestaurant,
     ViewRestaurant,
+    Orders,
 }

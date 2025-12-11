@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import React from 'react'
 
-export default function RestaurantTableSkeleton() {
+export default function TableSkeleton() {
     return (
         <div className="border rounded-xl p-4">
             <div className="grid grid-cols-4 gap-4 mb-4">

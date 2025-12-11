@@ -1,5 +1,5 @@
 "use client";
-import { ViewRestaurant } from "@/modules/admin";
+import { ViewRestaurant } from "@/modules";
 import { useParams } from "next/navigation";
 import React from "react";
 

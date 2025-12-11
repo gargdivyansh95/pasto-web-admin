@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
-import { RestaurantTable, RestaurantTableSkeleton } from "./components";
+import { RestaurantTable } from "./components";
 import { restaurantsActions } from "./restaurants.action";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
+import { TableSkeleton } from "@/shared";
 
 export const Restaurants = () => {
 
@@ -104,7 +105,7 @@ export const Restaurants = () => {
                 </TabsList>
                 <TabsContent value="pending" className="mt-5">
                     {loading ? (
-                        <RestaurantTableSkeleton />
+                        <TableSkeleton />
                     ) : (
                         <RestaurantTable
                             restaurantList={restaurantList?.restaurants || []}
@@ -125,7 +126,7 @@ export const Restaurants = () => {
                 </TabsContent>
                 <TabsContent value="approved" className="mt-5">
                     {loading ? (
-                        <RestaurantTableSkeleton />
+                        <TableSkeleton />
                     ) : (
                         <RestaurantTable
                             restaurantList={restaurantList?.restaurants || []}
@@ -146,7 +147,7 @@ export const Restaurants = () => {
                 </TabsContent>
                 <TabsContent value="rejected" className="mt-5">
                     {loading ? (
-                        <RestaurantTableSkeleton />
+                        <TableSkeleton />
                     ) : (
                         <RestaurantTable
                             restaurantList={restaurantList?.restaurants || []}

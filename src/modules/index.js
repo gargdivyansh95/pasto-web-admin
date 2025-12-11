@@ -1,5 +1,5 @@
 import { Home } from "./website";
-import { Login, Dashboard, Restaurants, VerifyRestaurant, ViewRestaurant } from "./admin";
+import { Login, Dashboard, Restaurants, VerifyRestaurant, ViewRestaurant, Orders } from "./admin";
 
 export {
     Home,
@@ -7,4 +7,6 @@ export {
     Dashboard,
     Restaurants,
     VerifyRestaurant,
+    ViewRestaurant,
+    Orders,
 }
