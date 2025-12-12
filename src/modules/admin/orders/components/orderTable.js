@@ -59,10 +59,8 @@ export default function OrderTable({ ordersList, onClick }) {
                             <TableCell>
                                 <Button className="cursor-pointer text-white hover:text-white bg-brand-orange hover:bg-brand-orange-hover"
                                     variant="outline"
-                                    // disabled={isPending ? item?.user?.achievement !== 3 : false}
-                                    onClick={() => onClick(item.restaurantId)}
+                                    onClick={() => onClick(item.orderId)}
                                 >
-                                    {/* {isPending ? "Verify" : "View"} */}
                                     View
                                 </Button>
                             </TableCell>

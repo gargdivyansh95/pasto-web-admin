@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
-import { restaurantsActions } from "../restaurants/restaurants.action";
-import { RestaurantTable, RestaurantTableSkeleton } from "../restaurants/components";
 import { ordersActions } from "./orders.action";
 import { OrderTable } from "./components";
 import { TableSkeleton } from "@/shared";
@@ -34,17 +32,14 @@ export const Orders = () => {
             {status, lastDocId},
             (response) => {
                 if (response.success === true) {
-                    console.log(response, 'rrrrrrrrrrrrrrrr')
                     setOrdersList(prev => {
                     const newOrders = response.data?.orders || [];
                     return lastDocId
                         ? {
                             orders: [...(prev.orders || []), ...newOrders],
-                            // hasMore: response.data?.hasMore
                         }
                         : {
                             orders: newOrders,
-                            // hasMore: response.data?.hasMore
                         };
                 });
                     setHasMore(response.data?.hasMore);
@@ -73,10 +68,8 @@ export const Orders = () => {
     };
 
     const handleView = (orderId) => {
-        router.push(`/admin/orders/verify-restaurant/${orderId}`);
+        router.push(`/admin/orders/order-details/${orderId}`);
     };
-
-    // console.log(ordersList, 'ordersList')
 
     return (
         <div>
