@@ -13,6 +13,7 @@ import { DetailCard } from "../restaurants/components";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { formatDate, formatTime, getOrderStatus } from "@/utilities";
+import { Badge } from "@/components/ui/badge";
 
 export const OrderDetails = ({ orderId }) => {
 
@@ -51,16 +52,17 @@ export const OrderDetails = ({ orderId }) => {
             <div className="grid grid-cols-12 gap-10 mb-8">
                 <div className="col-span-6">
                     <Card className="mt-0 py-4 px-4 gap-4 relative">
-                        <div className="absolute top-0 right-0 flex items-center gap-2 bg-brand-green px-2 py-1 rounded-tr-xl rounded-bl-xl">
-                            <h1 className="text-white text-sm font-medium">{orderDetails?.isSelfOrder ? "Self Order" : "Order By Customer"}</h1>
-                        </div>
+                        <Badge className={`text-white text-sm font-medium absolute top-0 right-0 rounded-none rounded-tr-xl rounded-bl-xl bg-brand-green`}>
+                            {orderDetails?.isSelfOrder ? "Self Order" : "Order By Customer"}
+                        </Badge>
                         {orderDetails?.isSelfOrder ?
-                            <div className={`absolute top-0 left-0 flex items-center gap-2 px-2 py-1 rounded-tl-xl rounded-br-xl ${orderDetails?.isPaid ? "bg-[#34C759]" : "bg-brand-red"}`}>
-                                <h1 className="text-white text-sm font-medium">{orderDetails?.isPaid ? "Paid" : "Not Paid"}</h1>
-                            </div> :
-                            <div className={`absolute top-0 left-0 flex items-center gap-2 px-2 py-1 rounded-tl-xl rounded-br-xl ${orderDetails?.isSelfPickup ? "bg-[#00C7BE]" : "bg-[#34C759]"}`}>
-                                <h1 className="text-white text-sm font-medium">{orderDetails?.isSelfPickup ? "Self Pickup Order" : "Door Step Order"}</h1>
-                            </div>
+                            <Badge className={`text-white text-sm font-medium absolute top-0 left-0 rounded-none rounded-tl-xl rounded-br-xl ${orderDetails?.isPaid ? "bg-[#34C759]" : "bg-brand-red"}`}>
+                                {orderDetails?.isPaid ? "Paid" : "Not Paid"}
+                            </Badge>
+                            :
+                            <Badge className={`text-white text-sm font-medium absolute top-0 left-0 rounded-none rounded-tl-xl rounded-br-xl ${orderDetails?.isSelfPickup ? "bg-[#00C7BE]" : "bg-[#34C759]"}`}>
+                                {orderDetails?.isSelfPickup ? 'Self Pickup Order' : 'Door Step Order'}
+                            </Badge>
                         }
                         <CardHeader className="px-0 gap-0 pt-6">
                             <CardTitle className="text-xl font-bold">Order Item Details</CardTitle>
@@ -73,7 +75,10 @@ export const OrderDetails = ({ orderId }) => {
                                 </div>
                                 <div className="flex items-center gap-2 mb-4">
                                     <h1 className="text-base font-medium">Order Status:</h1>
-                                    <h1 className="text-white px-2 py-1 text-sm font-medium rounded " style={{ backgroundColor: status?.color }}>{status?.title}</h1>
+                                    <Badge className={`text-white text-sm font-medium rounded`} style={{ backgroundColor: status?.color }}>
+                                        {status?.title}
+                                    </Badge>
+                                    {/* <h1 className="text-white px-2 py-1 text-sm font-medium rounded " style={{ backgroundColor: status?.color }}>{status?.title}</h1> */}
                                 </div>
                             </div>
                             {!orderDetails?.restaurantName ? (
@@ -112,13 +117,6 @@ export const OrderDetails = ({ orderId }) => {
                                                                 <h1 className="text-base font-semibold text-brand-orange">{orderDetails?.isSelfPickup ? "Yes" : "No"}</h1>
                                                             </div>
                                                         }
-                                                        {/* {orderDetails?.isSelfOrder &&
-                                                            <div className="flex items-center gap-2">
-                                                                <h1 className="text-base font-medium">Self Pickup:</h1>
-                                                                <h1 className="text-base font-semibold text-brand-orange">{orderDetails?.isSelfPickup ? "Yes" : "No"}</h1>
-                                                            </div>
-                                                        } */}
-                                                        
                                                     </div>
                                                 </div>
                                                 <ScrollArea className="w-full rounded-md border mt-3">

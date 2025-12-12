@@ -57,13 +57,15 @@ export default function OrderTable({ ordersList, isSelfOrder, onClick }) {
                             <TableCell>{formatTime(item?.createdAt)}</TableCell>
                             {!isSelfOrder &&
                                 <TableCell>
-                                    <Badge className={`text-white ${item?.isSelfPickup ? "bg-[#00C7BE]" : "bg-[#34C759]"}`}>
+                                    <Badge className={`text-white rounded ${item?.isSelfPickup ? "bg-[#00C7BE]" : "bg-[#34C759]"}`}>
                                         {item?.isSelfPickup ? 'Self Pickup Order' : 'Door Step Order'}
                                     </Badge>
                                 </TableCell>
                             }
                             <TableCell>
-                                <p className="text-white px-2 py-1 rounded w-fit" style={{ backgroundColor: status?.color }}>{status?.title}</p>
+                                <Badge className={`text-white rounded`} style={{ backgroundColor: status?.color }}>
+                                    {status?.title}
+                                </Badge>
                             </TableCell>
                             <TableCell>
                                 <Button className="cursor-pointer text-white hover:text-white bg-brand-orange hover:bg-brand-orange-hover"
