@@ -101,7 +101,7 @@ export const OrderDetails = ({ orderId }) => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <ScrollArea className="w-full rounded-md border mt-2">
+                                                <ScrollArea className="w-full rounded-md border mt-3">
                                                     <Table>
                                                         <TableHeader>
                                                             <TableRow>
@@ -128,12 +128,16 @@ export const OrderDetails = ({ orderId }) => {
                                             </div>
                                         )
                                     })}
+                                    <DetailCard label="Cooking Instructions" value={orderDetails?.cookingInstructions ? orderDetails?.cookingInstructions : "N/A"} />
                                     <DetailCard label="Total Amount" value={`₹${orderDetails?.totalAmount}`} />
                                     <div className="mt-6">
                                         <h1 className="text-base font-semibold">Order Status Timeline</h1>
                                         <DetailCard label="Order Date" value={formatDate(orderDetails?.createdAt)} />
                                         <DetailCard label="Accepted At" value={formatTime(orderDetails?.orderStatus?.acceptedAt)} />
-                                        <DetailCard label="Out for Delivery At" value={formatTime(orderDetails?.orderStatus?.outForDeliveryAt)} />
+                                        <DetailCard
+                                            label={orderDetails?.isSelfPickup || orderDetails?.isSelfOrder ? "Ready For Pickup At" : "Out for Delivery At"}
+                                            value={orderDetails?.isSelfPickup || orderDetails?.isSelfOrder ? formatTime(orderDetails?.orderStatus?.readyForPickupAt) : formatTime(orderDetails?.orderStatus?.outForDeliveryAt)}
+                                        />
                                         <DetailCard label="Delivered At" value={formatTime(orderDetails?.orderStatus?.deliveredAt)} />
                                     </div>
                                 </>
