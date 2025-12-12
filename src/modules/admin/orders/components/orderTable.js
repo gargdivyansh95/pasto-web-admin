@@ -12,18 +12,19 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { formatDate, formatTime } from "@/utilities";
 
-export default function OrderTable({ restaurantList, isPending, onClick, handleUpdateStatus }) {
+export default function OrderTable({ ordersList, onClick }) {
 
     const getAddress = (data) => {
         return `${data?.address}, ${data?.area}, ${data?.city}, ${data?.state}, ${data?.pincode}`;
     };
 
-    if (!restaurantList || restaurantList.length === 0) {
+    if (!ordersList || ordersList.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-20">
                 <h2 className="text-2xl font-semibold text-muted-foreground">
-                    No Restaurants Found
+                    No Orders Found
                 </h2>
             </div>
         );
@@ -34,44 +35,35 @@ export default function OrderTable({ restaurantList, isPending, onClick, handleU
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="text-base font-semibold text-brand-orange">Owner Name</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Order Id</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Order From</TableHead>
                         <TableHead className="text-base font-semibold text-brand-orange">Restaurant Name</TableHead>
-                        <TableHead className="text-base font-semibold text-brand-orange">Primary Number</TableHead>
-                        <TableHead className="text-base font-semibold text-brand-orange">Secondary Number</TableHead>
-                        <TableHead className="text-base font-semibold text-brand-orange">Address</TableHead>
-                        <TableHead className="text-base font-semibold text-brand-orange">Onboarding Status</TableHead>
-                        <TableHead className="text-base font-semibold text-brand-orange">Status</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Customer Number</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Order Date</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Order Time</TableHead>
+                        <TableHead className="text-base font-semibold text-brand-orange">Order Status</TableHead>
                         <TableHead className="text-base font-semibold text-brand-orange">Action</TableHead>
                     </TableRow>
                 </TableHeader>
 
                 <TableBody>
-                    {restaurantList.map((item, index) => (
+                    {ordersList.map((item, index) => (
                         <TableRow key={index}>
-                            <TableCell>{item?.ownerName}</TableCell>
-                            <TableCell>{item?.restaurantName}</TableCell>
-                            <TableCell>{item?.user?.phoneNumber}</TableCell>
-                            <TableCell>
-                                {item?.contactNumbers?.length > 0 ? item.contactNumbers.map((n) => n.number).join(", ") : "N/A"}
-                            </TableCell>
-                            <TableCell>{getAddress(item?.addressDetails)}</TableCell>
-                            <TableCell>
-                                {item?.user?.achievement === 2 ? "Restaurant Menu Pending" : "Completed"}
-                            </TableCell>
-                            <TableCell>
-                                <Button className={`text-white cursor-pointer ${item?.status === "ACTIVE" ? "bg-brand-green hover:bg-brand-green-hover" : "bg-brand-red hover:bg-brand-red-hover"}`}
-                                  onClick={() => handleUpdateStatus(item.restaurantId, item?.status === "ACTIVE" ? "INACTIVE" : "ACTIVE")}
-                                >
-                                    {item?.status}
-                                </Button>
-                            </TableCell>
+                            <TableCell>{item?.orderId}</TableCell>
+                            <TableCell>{item?.userDetails?.name ? item?.userDetails?.name : ''}</TableCell>
+                            <TableCell>{item?.restaurantName ? item?.restaurantName : ''}</TableCell>
+                            <TableCell>{item?.userDetails?.phoneNumber ? item?.userDetails?.phoneNumber : ''}</TableCell>
+                            <TableCell>{formatDate(item?.createdAt)}</TableCell>
+                            <TableCell>{formatTime(item?.createdAt)}</TableCell>
+                            <TableCell>{item?.orderStatus?.status?.label ? item?.orderStatus?.status?.label : ''}</TableCell>
                             <TableCell>
                                 <Button className="cursor-pointer text-white hover:text-white bg-brand-orange hover:bg-brand-orange-hover"
                                     variant="outline"
-                                    disabled={isPending ? item?.user?.achievement !== 3 : false}
+                                    // disabled={isPending ? item?.user?.achievement !== 3 : false}
                                     onClick={() => onClick(item.restaurantId)}
                                 >
-                                    {isPending ? "Verify" : "View"}
+                                    {/* {isPending ? "Verify" : "View"} */}
+                                    View
                                 </Button>
                             </TableCell>
 

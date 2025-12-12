@@ -8,90 +8,75 @@ import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { restaurantsActions } from "../restaurants/restaurants.action";
 import { RestaurantTable, RestaurantTableSkeleton } from "../restaurants/components";
+import { ordersActions } from "./orders.action";
+import { OrderTable } from "./components";
+import { TableSkeleton } from "@/shared";
 
 export const Orders = () => {
 
     const router = useRouter();
     const dispatch = useDispatch();
     const [tabIndex, setTabIndex] = useState("customer");
-    // const [loading, setLoading] = useState(true);
-    // const [loadingMore, setLoadingMore] = useState(false);
-    // const [restaurantList, setRestaurantList] = useState([]);
-    // const [lastDoc, setLastDoc] = useState(null);
-    // const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [ordersList, setOrdersList] = useState([]);
+    const [lastDoc, setLastDoc] = useState(null);
+    const [hasMore, setHasMore] = useState(true);
 
-    // const getStatusByTab = (index) => {
-    //     if (index === 'pending') return null
-    //     if (index === 'approved') return true
-    //     if (index === 'rejected') return false
-    //     return null
-    // }
+    const getStatusByTab = (index) => {
+        if (index === 'customer') return false
+        if (index === 'self') return true
+        return null
+    }
 
-    // const fetchRestaurantList = (status, lastDocId) => {
-    //     dispatch(restaurantsActions.fetchRestaurants(
-    //         {status, lastDocId},
-    //         (response) => {
-    //             if (response.success === true) {
-    //                 setRestaurantList(prev => {
-    //                 const newRestaurants = response.data?.restaurants || [];
-    //                 return lastDocId
-    //                     ? {
-    //                         restaurants: [...(prev.restaurants || []), ...newRestaurants],
-    //                         // hasMore: response.data?.hasMore
-    //                     }
-    //                     : {
-    //                         restaurants: newRestaurants,
-    //                         // hasMore: response.data?.hasMore
-    //                     };
-    //             });
-    //                 setHasMore(response.data?.hasMore);
-    //                 setLastDoc(response.data?.lastVisible);
-    //                 setLoading(false);
-    //                 setLoadingMore(false);
-    //             }
-    //         },
-    //         (error) => {
-    //             toast.error(error.error || "Fetch Restaurants API failed");
-    //             setLoading(false);
-    //             setLoadingMore(false);
-    //         }
-    //     )
-    //     );
-    // };
+    const fetchOrdersList = (status, lastDocId) => {
+        dispatch(ordersActions.fetchOrders(
+            {status, lastDocId},
+            (response) => {
+                if (response.success === true) {
+                    console.log(response, 'rrrrrrrrrrrrrrrr')
+                    setOrdersList(prev => {
+                    const newOrders = response.data?.orders || [];
+                    return lastDocId
+                        ? {
+                            orders: [...(prev.orders || []), ...newOrders],
+                            // hasMore: response.data?.hasMore
+                        }
+                        : {
+                            orders: newOrders,
+                            // hasMore: response.data?.hasMore
+                        };
+                });
+                    setHasMore(response.data?.hasMore);
+                    setLastDoc(response.data?.lastVisible);
+                    setLoading(false);
+                    setLoadingMore(false);
+                }
+            },
+            (error) => {
+                toast.error(error.error || "Fetch Restaurants API failed");
+                setLoading(false);
+                setLoadingMore(false);
+            }
+        )
+        );
+    };
 
-    // useEffect(() => {
-    //     fetchRestaurantList(getStatusByTab(tabIndex), null);
-    // }, [dispatch, tabIndex]);
+    useEffect(() => {
+        fetchOrdersList(getStatusByTab(tabIndex), null);
+    }, [dispatch, tabIndex]);
 
-    // const handleLoadMore = () => {
-    //     if (!hasMore) return;
-    //     setLoadingMore(true);
-    //     fetchRestaurantList(getStatusByTab(tabIndex), lastDoc);
-    // };
+    const handleLoadMore = () => {
+        if (!hasMore) return;
+        setLoadingMore(true);
+        fetchOrdersList(getStatusByTab(tabIndex), lastDoc);
+    };
 
-    // const handleUpdateStatus = (restaurantId, status) => {
-    //     dispatch(restaurantsActions.updateRestaurantStatus(
-    //         {restaurantId, status},
-    //         (response) => {
-    //             if (response.success === true) {
-    //                 fetchRestaurantList(getStatusByTab(tabIndex), null);
-    //                 toast.success(response.message);
-    //             }
-    //         },
-    //         (error) => {
-    //             toast.error(error.error || "Update Restaurant Status API failed");
-    //         }
-    //     )
-    //     );
-    // };
+    const handleView = (orderId) => {
+        router.push(`/admin/orders/verify-restaurant/${orderId}`);
+    };
 
-    // const handleVerify = (restaurantId) => {
-    //     router.push(`/admin/orders/verify-restaurant/${restaurantId}`);
-    // };
-
-    // const handleView = (restaurantId) => {
-    //     router.push(`/admin/orders/view-restaurant/${restaurantId}`);
-    // };
+    // console.log(ordersList, 'ordersList')
 
     return (
         <div>
@@ -101,14 +86,13 @@ export const Orders = () => {
                     <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="customer">Customer Orders</TabsTrigger>
                     <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="self">Restaurants Self Orders</TabsTrigger>
                 </TabsList>
-                <TabsContent value="pending" className="mt-5">
-                    {/* {loading ? (
-                        <RestaurantTableSkeleton />
+                <TabsContent value="customer" className="mt-5">
+                    {loading ? (
+                        <TableSkeleton />
                     ) : (
-                        <RestaurantTable
-                            restaurantList={restaurantList?.restaurants || []}
-                            isPending={true} onClick={handleVerify}
-                            handleUpdateStatus={handleUpdateStatus}
+                        <OrderTable
+                            ordersList={ordersList?.orders || []}
+                            onClick={handleView}
                         />
                     )}
                     {!loading && hasMore && (
@@ -120,17 +104,15 @@ export const Orders = () => {
                                 {loadingMore ? "Loading..." : "Load More"}
                             </Button>
                         </div>
-                    )} */}
-                    cwcqe
+                    )}
                 </TabsContent>
-                <TabsContent value="approved" className="mt-5">
-                    {/* {loading ? (
-                        <RestaurantTableSkeleton />
+                <TabsContent value="self" className="mt-5">
+                    {loading ? (
+                        <TableSkeleton />
                     ) : (
-                        <RestaurantTable
-                            restaurantList={restaurantList?.restaurants || []}
-                            isPending={false} onClick={handleView}
-                            handleUpdateStatus={handleUpdateStatus}
+                        <OrderTable
+                            ordersList={ordersList?.orders || []}
+                            onClick={handleView}
                         />
                     )}
                     {!loading && hasMore && (
@@ -142,8 +124,7 @@ export const Orders = () => {
                                 {loadingMore ? "Loading..." : "Load More"}
                             </Button>
                         </div>
-                    )} */}
-                    dwdwd
+                    )}
                 </TabsContent>
             </Tabs>
         </div>

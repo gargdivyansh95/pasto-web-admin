@@ -1,6 +1,6 @@
 export const actionTypes = {
-    FetchRestaurants: '[Restaurants] Fetch Restaurant Counts Action',
-    FetchRestaurantsSuccess: '[Restaurants] Fetch Restaurant Counts Success Action',
+    FetchRestaurants: '[Restaurants] Fetch Restaurants Action',
+    FetchRestaurantsSuccess: '[Restaurants] Fetch Restaurants Success Action',
     FetchRestaurantById: '[Restaurants] Fetch Restaurant By Id Action',
     FetchRestaurantDocuments: '[Restaurants] Fetch Restaurant Documents Action',
     UpdateRestaurantDocuments: '[Restaurants] Update Restaurant Documents Action',
