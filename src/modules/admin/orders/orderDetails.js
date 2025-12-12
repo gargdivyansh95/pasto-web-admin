@@ -50,8 +50,19 @@ export const OrderDetails = ({ orderId }) => {
             <h1 className="text-3xl font-bold mb-6 mt-2">Order Details</h1>
             <div className="grid grid-cols-12 gap-10 mb-8">
                 <div className="col-span-6">
-                    <Card className="mt-0 py-4 px-4 gap-4">
-                        <CardHeader className="px-0 gap-0">
+                    <Card className="mt-0 py-4 px-4 gap-4 relative">
+                        <div className="absolute top-0 right-0 flex items-center gap-2 bg-brand-green px-2 py-1 rounded-tr-xl rounded-bl-xl">
+                            <h1 className="text-white text-sm font-medium">{orderDetails?.isSelfOrder ? "Self Order" : "Order By Customer"}</h1>
+                        </div>
+                        {orderDetails?.isSelfOrder ?
+                            <div className={`absolute top-0 left-0 flex items-center gap-2 px-2 py-1 rounded-tl-xl rounded-br-xl ${orderDetails?.isPaid ? "bg-[#34C759]" : "bg-brand-red"}`}>
+                                <h1 className="text-white text-sm font-medium">{orderDetails?.isPaid ? "Paid" : "Not Paid"}</h1>
+                            </div> :
+                            <div className={`absolute top-0 left-0 flex items-center gap-2 px-2 py-1 rounded-tl-xl rounded-br-xl ${orderDetails?.isSelfPickup ? "bg-[#00C7BE]" : "bg-[#34C759]"}`}>
+                                <h1 className="text-white text-sm font-medium">{orderDetails?.isSelfPickup ? "Self Pickup Order" : "Door Step Order"}</h1>
+                            </div>
+                        }
+                        <CardHeader className="px-0 gap-0 pt-6">
                             <CardTitle className="text-xl font-bold">Order Item Details</CardTitle>
                         </CardHeader>
                         <CardContent className="px-0">
@@ -95,10 +106,19 @@ export const OrderDetails = ({ orderId }) => {
                                                             <h1 className="text-base font-medium">Item Description:</h1>
                                                             <h1 className="text-base font-semibold text-brand-orange">{item?.itemDescription}</h1>
                                                         </div>
-                                                        <div className="flex items-center gap-2">
-                                                            <h1 className="text-base font-medium">Self Pickup:</h1>
-                                                            <h1 className="text-base font-semibold text-brand-orange">{orderDetails?.isSelfPickup ? "Yes" : "No"}</h1>
-                                                        </div>
+                                                        {!orderDetails?.isSelfOrder &&
+                                                            <div className="flex items-center gap-2">
+                                                                <h1 className="text-base font-medium">Self Pickup:</h1>
+                                                                <h1 className="text-base font-semibold text-brand-orange">{orderDetails?.isSelfPickup ? "Yes" : "No"}</h1>
+                                                            </div>
+                                                        }
+                                                        {/* {orderDetails?.isSelfOrder &&
+                                                            <div className="flex items-center gap-2">
+                                                                <h1 className="text-base font-medium">Self Pickup:</h1>
+                                                                <h1 className="text-base font-semibold text-brand-orange">{orderDetails?.isSelfPickup ? "Yes" : "No"}</h1>
+                                                            </div>
+                                                        } */}
+                                                        
                                                     </div>
                                                 </div>
                                                 <ScrollArea className="w-full rounded-md border mt-3">
@@ -176,9 +196,6 @@ export const OrderDetails = ({ orderId }) => {
                                             <div className="flex items-center gap-2">
                                                 <h1 className="text-base font-medium">Restaurant Contact Number:</h1>
                                                 <h1 className="text-base font-semibold text-brand-orange">{orderDetails?.restaurantNumber}</h1>
-                                            </div>
-                                            <div className="w-fit bg-brand-green px-2 py-1 rounded">
-                                                <h1 className="text-white text-sm font-medium">{orderDetails?.isSelfOrder ? "Self Order" : "Order By Customer"}</h1>
                                             </div>
                                         </div>
                                     </div>
