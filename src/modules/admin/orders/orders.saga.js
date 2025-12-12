@@ -18,24 +18,23 @@ export function* getAllOrders(action) {
     }
 }
 
-// export function* getRestaurantById(action) {
-//     const { restaurantId } = action.payload;
-//     try {
-//         const response = yield call(axios.get, `/api/admin/restaurants/${restaurantId}`);
-//         if (response.status === 200) {
-//             action.onSuccess(response.data);
-//         } else {
-//             action.onError(response.data);
-//         }
-//     } catch (error) {
-//         console.error('Fetch Restaurants Error:', error);
-//         action.onError(error.response.data);
-//     }
-// }
-
+export function* getOrderById(action) {
+    const { orderId } = action.payload;
+    try {
+        const response = yield call(axios.get, `/api/admin/orders/${orderId}`);
+        if (response.status === 200) {
+            action.onSuccess(response.data);
+        } else {
+            action.onError(response.data);
+        }
+    } catch (error) {
+        console.error('Fetch Order By Id Error:', error);
+        action.onError(error.response.data);
+    }
+}
 
 // Watcher saga
 export function* saga() {
     yield takeLatest(actionTypes.FetchOrders, getAllOrders);
-    // yield takeLatest(actionTypes.FetchRestaurantById, getRestaurantById);
+    yield takeLatest(actionTypes.FetchOrderById, getOrderById);
 }

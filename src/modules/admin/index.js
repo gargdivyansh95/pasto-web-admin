@@ -4,6 +4,7 @@ import { Restaurants } from "./restaurants/restaurants";
 import { VerifyRestaurant } from "./restaurants/verifyRestaurant";
 import { ViewRestaurant } from "./restaurants/viewRestaurants";
 import { Orders } from "./orders/orders";
+import { OrderDetails } from "./orders/orderDetails";
 
 export {
     Login,
@@ -12,4 +13,5 @@ export {
     VerifyRestaurant,
     ViewRestaurant,
     Orders,
+    OrderDetails,
 }

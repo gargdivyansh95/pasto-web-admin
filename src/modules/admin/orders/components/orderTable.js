@@ -12,13 +12,9 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { formatDate, formatTime } from "@/utilities";
+import { formatDate, formatTime, getOrderStatus } from "@/utilities";
 
 export default function OrderTable({ ordersList, onClick }) {
-
-    const getAddress = (data) => {
-        return `${data?.address}, ${data?.area}, ${data?.city}, ${data?.state}, ${data?.pincode}`;
-    };
 
     if (!ordersList || ordersList.length === 0) {
         return (
@@ -47,15 +43,19 @@ export default function OrderTable({ ordersList, onClick }) {
                 </TableHeader>
 
                 <TableBody>
-                    {ordersList.map((item, index) => (
-                        <TableRow key={index}>
+                    {ordersList.map((item, index) => {
+                        const status = getOrderStatus(item?.orderStatus?.status?.id);
+                        return (
+                            <TableRow key={index}>
                             <TableCell>{item?.orderId}</TableCell>
                             <TableCell>{item?.userDetails?.name ? item?.userDetails?.name : ''}</TableCell>
                             <TableCell>{item?.restaurantName ? item?.restaurantName : ''}</TableCell>
                             <TableCell>{item?.userDetails?.phoneNumber ? item?.userDetails?.phoneNumber : ''}</TableCell>
                             <TableCell>{formatDate(item?.createdAt)}</TableCell>
                             <TableCell>{formatTime(item?.createdAt)}</TableCell>
-                            <TableCell>{item?.orderStatus?.status?.label ? item?.orderStatus?.status?.label : ''}</TableCell>
+                            <TableCell>
+                                <p className="text-white px-2 py-1 rounded w-fit" style={{ backgroundColor: status?.color }}>{status?.title}</p>
+                            </TableCell>
                             <TableCell>
                                 <Button className="cursor-pointer text-white hover:text-white bg-brand-orange hover:bg-brand-orange-hover"
                                     variant="outline"
@@ -66,7 +66,8 @@ export default function OrderTable({ ordersList, onClick }) {
                             </TableCell>
 
                         </TableRow>
-                    ))}
+                        )
+                    })}
                 </TableBody>
             </Table>
         </ScrollArea>
