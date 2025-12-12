@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDate, formatTime, getOrderStatus } from "@/utilities";
+import { Badge } from "@/components/ui/badge";
 
-export default function OrderTable({ ordersList, onClick }) {
+export default function OrderTable({ ordersList, isSelfOrder, onClick }) {
 
     if (!ordersList || ordersList.length === 0) {
         return (
@@ -37,6 +38,7 @@ export default function OrderTable({ ordersList, onClick }) {
                         <TableHead className="text-base font-semibold text-brand-orange">Customer Number</TableHead>
                         <TableHead className="text-base font-semibold text-brand-orange">Order Date</TableHead>
                         <TableHead className="text-base font-semibold text-brand-orange">Order Time</TableHead>
+                        {!isSelfOrder && <TableHead className="text-base font-semibold text-brand-orange">Order Type</TableHead>}
                         <TableHead className="text-base font-semibold text-brand-orange">Order Status</TableHead>
                         <TableHead className="text-base font-semibold text-brand-orange">Action</TableHead>
                     </TableRow>
@@ -53,6 +55,13 @@ export default function OrderTable({ ordersList, onClick }) {
                             <TableCell>{item?.userDetails?.phoneNumber ? item?.userDetails?.phoneNumber : ''}</TableCell>
                             <TableCell>{formatDate(item?.createdAt)}</TableCell>
                             <TableCell>{formatTime(item?.createdAt)}</TableCell>
+                            {!isSelfOrder &&
+                                <TableCell>
+                                    <Badge className={`text-white ${item?.isSelfPickup ? "bg-[#00C7BE]" : "bg-[#34C759]"}`}>
+                                        {item?.isSelfPickup ? 'Self Pickup Order' : 'Door Step Order'}
+                                    </Badge>
+                                </TableCell>
+                            }
                             <TableCell>
                                 <p className="text-white px-2 py-1 rounded w-fit" style={{ backgroundColor: status?.color }}>{status?.title}</p>
                             </TableCell>

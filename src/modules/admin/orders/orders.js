@@ -85,6 +85,7 @@ export const Orders = () => {
                     ) : (
                         <OrderTable
                             ordersList={ordersList?.orders || []}
+                            isSelfOrder={false}
                             onClick={handleView}
                         />
                     )}
@@ -105,6 +106,7 @@ export const Orders = () => {
                     ) : (
                         <OrderTable
                             ordersList={ordersList?.orders || []}
+                            isSelfOrder={true}
                             onClick={handleView}
                         />
                     )}
