@@ -11,6 +11,7 @@ import { restaurantsActions } from "./restaurants.action";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton } from "@/shared/skeletons";
 
 export const ViewRestaurant = ({ restaurantId }) => {
 
@@ -98,28 +99,21 @@ export const ViewRestaurant = ({ restaurantId }) => {
 
     const getOpeningTime = (d) => `${d?.startTime} - ${d?.endTime}`;
 
+    const isLoading = !restaurant || !restaurantDocs;
 
     return (
         <form>
-            <h1 className="text-3xl font-bold mb-6 mt-2">Restaurant Verify</h1>
+            <h1 className="text-3xl font-bold mb-6 mt-2">Restaurant Details</h1>
             <div className="grid grid-cols-12 gap-6 mb-8">
                 <div className="col-span-7 mr-14">
                     <Card className="mt-0 py-4 px-4 gap-4">
-                        <CardHeader className="px-0 gap-0">
-                            <CardTitle className="text-xl font-bold">Restaurant Details</CardTitle>
-                        </CardHeader>
-                        <CardContent className="px-0">
-                            {!restaurant?.restaurantName ? (
-                                <div className="space-y-4">
-                                    <Skeleton className="h-36 w-36 rounded-md" />
-                                    {
-                                        Array.from({ length: 6 }).map((_, i) => (
-                                            <Skeleton key={i} className="h-8 w-100" />
-                                        ))
-                                    }
-                                </div>
-                            ) : (
-                                <>
+                        {isLoading ?
+                            <CardSkeleton /> :
+                            <>
+                                <CardHeader className="px-0 gap-0">
+                                    <CardTitle className="text-xl font-bold">Restaurant Details</CardTitle>
+                                </CardHeader>
+                                <CardContent className="px-0">
                                     <Image src={restaurant?.restaurantLogo || NoImage} width={140} height={140} alt="Restaurant" className="rounded-md border" />
                                     <DetailCard label="Owner Name" value={restaurant?.ownerName} />
                                     <DetailCard label="Restaurant Name" value={restaurant?.restaurantName} />
@@ -133,10 +127,9 @@ export const ViewRestaurant = ({ restaurantId }) => {
                                     <DetailCard label="Delievery Range" value={restaurant?.deliveryRange?.label} />
                                     <DetailCard label="Delievery Rules" value={restaurant?.deliveryRules?.map(item => `${item?.range?.label} : ₹${item?.price}`).join(', ')} />
                                     <DetailCard label="Status" value={restaurant.status} />
-                                </>
-                            )}
-
-                        </CardContent>
+                                </CardContent>
+                            </>
+                        }
                     </Card>
                     <Card className="mt-6 py-4 px-4 gap-1">
                         <CardHeader className="px-0 gap-0">
@@ -173,7 +166,7 @@ export const ViewRestaurant = ({ restaurantId }) => {
                             const doc = restaurantDocs?.[key];
                             return (
                                 <TabsContent key={key} value={key} className="mt-4">
-                                    {!restaurantDocs ? (
+                                    {isLoading ? (
                                         <div className="space-y-4">
                                             <Skeleton className="h-6 w-40" />
                                             <Skeleton className="h-10 w-full" />
