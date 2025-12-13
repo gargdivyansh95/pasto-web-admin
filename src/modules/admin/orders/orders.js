@@ -7,9 +7,8 @@ import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { ordersActions } from "./orders.action";
-import { OrderTable } from "./components";
+import { OrderFilters, OrderTable } from "./components";
 import { TableSkeleton } from "@/shared";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ORDER_STATUS } from "@/constants/enums";
 
 export const Orders = () => {
@@ -36,7 +35,7 @@ export const Orders = () => {
         },
         ...(filterStatus || []),
     ];
-    const [isSelected, setIsSelected] = useState(filterCategories[0]);
+    const [selectedStatus, setSelectedStatus] = useState(filterCategories[0]);
 
     const getStatusByTab = (index) => {
         if (index === 'customer') return false
@@ -104,7 +103,7 @@ export const Orders = () => {
         // Reset state
         setOrdersList([]);
         setLastDoc(null);
-        setIsSelected(filterCategories[0]);
+        setSelectedStatus(filterCategories[0]);
 
         // Fetch orders with default "all" status
         fetchOrdersList(getStatusByTab(tabIndex), filterCategories[0]?.id, null);
@@ -112,7 +111,7 @@ export const Orders = () => {
 
     const handleStatusChange = (value) => {
         const selected = filterCategories.find(item => item.id === value);
-        setIsSelected(selected);
+        setSelectedStatus(selected);
 
         // Reset and fetch with new status
         setOrdersList([]);
@@ -123,7 +122,7 @@ export const Orders = () => {
     // Handle load more
     const handleLoadMore = () => {
         if (!hasMore || loadingMore) return;
-        fetchOrdersList(getStatusByTab(tabIndex), isSelected?.id, lastDoc);
+        fetchOrdersList(getStatusByTab(tabIndex), selectedStatus?.id, lastDoc);
     };
 
     const handleView = (orderId) => {
@@ -140,20 +139,11 @@ export const Orders = () => {
                     <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="self">Restaurants Self Orders</TabsTrigger>
                 </TabsList>
                 <TabsContent value="customer" className="mt-0">
-                    <div className="flex flex-col items-end mb-4">
-                        <Select value={isSelected?.id} onValueChange={handleStatusChange}>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue>
-                                    {isSelected?.label || "Select order status"}
-                                </SelectValue>
-                            </SelectTrigger>
-                            <SelectContent>
-                                {filterCategories?.map((status) => (
-                                    <SelectItem key={status.id} value={status.id}>{status.label}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                    <OrderFilters
+                        filterCategories={filterCategories}
+                        selectedStatus={selectedStatus}
+                        onStatusChange={handleStatusChange}
+                    />
                     {loading ? (
                         <TableSkeleton />
                     ) : (
@@ -175,20 +165,11 @@ export const Orders = () => {
                     )}
                 </TabsContent>
                 <TabsContent value="self" className="mt-0">
-                    <div className="flex flex-col items-end mb-4">
-                        <Select value={isSelected?.id} onValueChange={handleStatusChange}>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue>
-                                    {isSelected?.label || "Select order status"}
-                                </SelectValue>
-                            </SelectTrigger>
-                            <SelectContent>
-                                {filterCategories?.map((status) => (
-                                    <SelectItem key={status.id} value={status.id}>{status.label}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                    <OrderFilters
+                        filterCategories={filterCategories}
+                        selectedStatus={selectedStatus}
+                        onStatusChange={handleStatusChange}
+                    />
                     {loading ? (
                         <TableSkeleton />
                     ) : (
