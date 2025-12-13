@@ -23,8 +23,11 @@ export const Orders = () => {
     const [ordersList, setOrdersList] = useState([]);
     const [lastDoc, setLastDoc] = useState(null);
     const [hasMore, setHasMore] = useState(true);
-    const excludedIds = [ORDER_STATUS.ONGOING_ORDER, ORDER_STATUS.CANCELLED_ORDER];
-    const filterStatus = orderStatusList?.filter(item => !excludedIds.includes(item.id));
+    const excludedIdsForCustomerOrder = [ORDER_STATUS.ONGOING_ORDER, ORDER_STATUS.CANCELLED_ORDER];
+    const excludedIdsForSelfOrder = [ORDER_STATUS.ONGOING_ORDER, ORDER_STATUS.CANCELLED_ORDER, ORDER_STATUS.NEW_ORDER, ORDER_STATUS.OUT_FOR_DELIVERY, ORDER_STATUS.READY_FOR_PICKUP];
+    const filterStatusForCustomerOrder = orderStatusList?.filter(item => !excludedIdsForCustomerOrder.includes(item.id));
+    const filterStatusForSelfOrder = orderStatusList?.filter(item => !excludedIdsForSelfOrder.includes(item.id));
+    const filterStatus = tabIndex === 'customer' ? filterStatusForCustomerOrder : filterStatusForSelfOrder;
     const filterCategories = [
         {
             id: 'all',
