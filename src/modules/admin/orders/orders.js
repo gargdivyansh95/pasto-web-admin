@@ -148,7 +148,6 @@ export const Orders = () => {
     const handleView = (orderId) => {
         router.push(`/admin/orders/order-details/${orderId}`);
     };
-    console.log(ordersList?.orders, 'orderStatusList')
 
     return (
         <div>
