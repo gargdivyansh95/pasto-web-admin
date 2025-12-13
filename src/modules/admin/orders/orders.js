@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
@@ -57,21 +57,26 @@ export const Orders = () => {
         ));
     };
 
-    const fetchOrdersList = (isSelfOrder, lastDocId) => {
+    const fetchOrdersList = (isSelfOrder, statusId, lastDocId) => {
+        if (!lastDocId) {
+            setLoading(true);
+        } else {
+            setLoadingMore(true);
+        }
         dispatch(ordersActions.fetchOrders(
-            {isSelfOrder, lastDocId},
+            { isSelfOrder, statusId, lastDocId },
             (response) => {
                 if (response.success === true) {
                     setOrdersList(prev => {
-                    const newOrders = response.data?.orders || [];
-                    return lastDocId
-                        ? {
-                            orders: [...(prev.orders || []), ...newOrders],
-                        }
-                        : {
-                            orders: newOrders,
-                        };
-                });
+                        const newOrders = response.data?.orders || [];
+                        return lastDocId
+                            ? {
+                                orders: [...(prev.orders || []), ...newOrders],
+                            }
+                            : {
+                                orders: newOrders,
+                            };
+                    });
                     setHasMore(response.data?.hasMore);
                     setLastDoc(response.data?.lastVisible);
                     setLoading(false);
@@ -91,19 +96,31 @@ export const Orders = () => {
         fetchOrderStatuses();
     }, [dispatch]);
 
+    // Load orders when tab changes
     useEffect(() => {
-        fetchOrdersList(getStatusByTab(tabIndex), null);
-    }, [dispatch, tabIndex]);
+        // Reset state
+        setOrdersList([]);
+        setLastDoc(null);
+        setIsSelected(filterCategories[0]);
+
+        // Fetch orders with default "all" status
+        fetchOrdersList(getStatusByTab(tabIndex), filterCategories[0]?.id, null);
+    }, [tabIndex]);
 
     const handleStatusChange = (value) => {
         const selected = filterCategories.find(item => item.id === value);
         setIsSelected(selected);
+
+        // Reset and fetch with new status
+        setOrdersList([]);
+        setLastDoc(null);
+        fetchOrdersList(getStatusByTab(tabIndex), selected?.id, null);
     };
 
+    // Handle load more
     const handleLoadMore = () => {
-        if (!hasMore) return;
-        setLoadingMore(true);
-        fetchOrdersList(getStatusByTab(tabIndex), lastDoc);
+        if (!hasMore || loadingMore) return;
+        fetchOrdersList(getStatusByTab(tabIndex), isSelected?.id, lastDoc);
     };
 
     const handleView = (orderId) => {

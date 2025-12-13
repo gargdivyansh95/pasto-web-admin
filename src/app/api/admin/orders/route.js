@@ -6,8 +6,9 @@ export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
         const isSelfOrder = searchParams.get('isSelfOrder'); // true, false, or null
-        const isSelfPickup = searchParams.get('isSelfPickup'); // true, false, or null
-        const isPaid = searchParams.get('isPaid'); // true, false, or null
+        const statusId = searchParams.get('statusId');
+        // const isSelfPickup = searchParams.get('isSelfPickup'); // true, false, or null
+        // const isPaid = searchParams.get('isPaid'); // true, false, or null
         const lastDocId = searchParams.get('lastDocId');
         const pageSize = parseInt(searchParams.get('pageSize') || PAGESIZE);
 
@@ -21,16 +22,23 @@ export async function GET(request) {
             const isSelfOrderBool = isSelfOrder === 'true';
             baseQuery = baseQuery.where('isSelfOrder', '==', isSelfOrderBool);
         }
-        
-        if (isSelfPickup !== null && isSelfPickup !== undefined && isSelfPickup !== 'all') {
-            const isSelfPickupBool = isSelfPickup === 'true';
-            baseQuery = baseQuery.where('isSelfPickup', '==', isSelfPickupBool);
+
+        // Apply status filter (if not "all")
+        if (statusId && statusId !== 'all') {
+            // Create reference to order_status document
+            const statusRef = adminDb.doc(`order_status/${statusId}`);
+            baseQuery = baseQuery.where('orderStatus.status', '==', statusRef);
         }
         
-        if (isPaid !== null && isPaid !== undefined && isPaid !== 'all') {
-            const isPaidBool = isPaid === 'true';
-            baseQuery = baseQuery.where('isPaid', '==', isPaidBool);
-        }
+        // if (isSelfPickup !== null && isSelfPickup !== undefined && isSelfPickup !== 'all') {
+        //     const isSelfPickupBool = isSelfPickup === 'true';
+        //     baseQuery = baseQuery.where('isSelfPickup', '==', isSelfPickupBool);
+        // }
+        
+        // if (isPaid !== null && isPaid !== undefined && isPaid !== 'all') {
+        //     const isPaidBool = isPaid === 'true';
+        //     baseQuery = baseQuery.where('isPaid', '==', isPaidBool);
+        // }
         
         // Get total count (parallel)
         const countPromise = baseQuery.count().get();

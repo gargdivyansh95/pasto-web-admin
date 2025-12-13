@@ -18,9 +18,9 @@ export function* getAllOrderStatuses(action) {
 }
 
 export function* getAllOrders(action) {
-    const { isSelfOrder, lastDocId } = action.payload;
+    const { isSelfOrder, statusId, lastDocId } = action.payload;
     try {
-        const response = yield call(axios.get, `/api/admin/orders?isSelfOrder=${isSelfOrder}&lastDocId=${lastDocId}`);
+        const response = yield call(axios.get, `/api/admin/orders?isSelfOrder=${isSelfOrder}&statusId=${statusId}&lastDocId=${lastDocId}`);
         if (response.status === 200) {
             yield put(ordersActions.fetchOrdersSuccess(response.data));
             action.onSuccess(response.data);
