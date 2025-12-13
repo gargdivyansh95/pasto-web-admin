@@ -23,7 +23,7 @@ export const Orders = () => {
     const [ordersList, setOrdersList] = useState([]);
     const [lastDoc, setLastDoc] = useState(null);
     const [hasMore, setHasMore] = useState(true);
-    const excludedIds = [ORDER_STATUS.OUT_FOR_DELIVERY, ORDER_STATUS.PREPARING_ORDER, ORDER_STATUS.CANCELLED_ORDER];
+    const excludedIds = [ORDER_STATUS.ONGOING_ORDER, ORDER_STATUS.CANCELLED_ORDER];
     const filterStatus = orderStatusList?.filter(item => !excludedIds.includes(item.id));
     const filterCategories = [
         {
@@ -137,30 +137,28 @@ export const Orders = () => {
                     <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="self">Restaurants Self Orders</TabsTrigger>
                 </TabsList>
                 <TabsContent value="customer" className="mt-0">
+                    <div className="flex flex-col items-end mb-4">
+                        <Select value={isSelected?.id} onValueChange={handleStatusChange}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue>
+                                    {isSelected?.label || "Select order status"}
+                                </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                                {filterCategories?.map((status) => (
+                                    <SelectItem key={status.id} value={status.id}>{status.label}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                     {loading ? (
                         <TableSkeleton />
                     ) : (
-                        <>
-                            <div className="flex flex-col items-end mb-4">
-                                <Select value={isSelected?.id} onValueChange={handleStatusChange}>
-                                    <SelectTrigger className="w-[180px]">
-                                        <SelectValue>
-                                            {isSelected?.label || "Select order status"}
-                                        </SelectValue>
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {filterCategories?.map((status) => (
-                                            <SelectItem key={status.id} value={status.id}>{status.label}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <OrderTable
-                                ordersList={ordersList?.orders || []}
-                                isSelfOrder={false}
-                                onClick={handleView}
-                            />
-                        </>
+                        <OrderTable
+                            ordersList={ordersList?.orders || []}
+                            isSelfOrder={false}
+                            onClick={handleView}
+                        />
                     )}
                     {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
@@ -173,7 +171,21 @@ export const Orders = () => {
                         </div>
                     )}
                 </TabsContent>
-                <TabsContent value="self" className="mt-5">
+                <TabsContent value="self" className="mt-0">
+                    <div className="flex flex-col items-end mb-4">
+                        <Select value={isSelected?.id} onValueChange={handleStatusChange}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue>
+                                    {isSelected?.label || "Select order status"}
+                                </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                                {filterCategories?.map((status) => (
+                                    <SelectItem key={status.id} value={status.id}>{status.label}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                     {loading ? (
                         <TableSkeleton />
                     ) : (
