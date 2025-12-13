@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -36,6 +36,7 @@ export const Orders = () => {
         ...(filterStatus || []),
     ];
     const [selectedStatus, setSelectedStatus] = useState(filterCategories[0]);
+    const [searchText, setSearchText] = useState('');
 
     const getStatusByTab = (index) => {
         if (index === 'customer') return false
@@ -103,6 +104,7 @@ export const Orders = () => {
         // Reset state
         setOrdersList([]);
         setLastDoc(null);
+        setSearchText(''); 
         setSelectedStatus(filterCategories[0]);
 
         // Fetch orders with default "all" status
@@ -115,11 +117,29 @@ export const Orders = () => {
 
         // Reset and fetch with new status
         setOrdersList([]);
+        setSearchText('');
         setLastDoc(null);
         fetchOrdersList(getStatusByTab(tabIndex), selected?.id, null);
     };
 
-    // Handle load more
+    const handleSearch = (value) => {
+        setSearchText(value);
+    };
+
+    const filteredOrders = useMemo(() => {
+        if (!searchText) return ordersList?.orders || [];
+        const text = searchText.toLowerCase();
+        return (ordersList?.orders || []).filter(order => {
+            return (
+                order?.orderId?.toLowerCase().includes(text) ||
+                order?.userDetails?.name?.toLowerCase().includes(text) ||
+                order?.restaurantName?.toString().includes(text) ||
+                order?.userDetails?.phoneNumber?.toString().includes(text) ||
+                order?.orderStatus?.status?.label?.toLowerCase().includes(text)
+            );
+        });
+    }, [ordersList, searchText]);
+
     const handleLoadMore = () => {
         if (!hasMore || loadingMore) return;
         fetchOrdersList(getStatusByTab(tabIndex), selectedStatus?.id, lastDoc);
@@ -128,7 +148,7 @@ export const Orders = () => {
     const handleView = (orderId) => {
         router.push(`/admin/orders/order-details/${orderId}`);
     };
-    console.log(orderStatusList, 'orderStatusList')
+    console.log(ordersList?.orders, 'orderStatusList')
 
     return (
         <div>
@@ -138,17 +158,19 @@ export const Orders = () => {
                     <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="customer">Customer Orders</TabsTrigger>
                     <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="self">Restaurants Self Orders</TabsTrigger>
                 </TabsList>
-                <TabsContent value="customer" className="mt-0">
+                <TabsContent value="customer" className="mt-3">
                     <OrderFilters
                         filterCategories={filterCategories}
                         selectedStatus={selectedStatus}
+                        searchText={searchText}
+                        onSearch={handleSearch}
                         onStatusChange={handleStatusChange}
                     />
                     {loading ? (
                         <TableSkeleton />
                     ) : (
                         <OrderTable
-                            ordersList={ordersList?.orders || []}
+                            ordersList={filteredOrders || []}
                             isSelfOrder={false}
                             onClick={handleView}
                         />
@@ -164,17 +186,19 @@ export const Orders = () => {
                         </div>
                     )}
                 </TabsContent>
-                <TabsContent value="self" className="mt-0">
+                <TabsContent value="self" className="mt-3">
                     <OrderFilters
                         filterCategories={filterCategories}
                         selectedStatus={selectedStatus}
+                        searchText={searchText}
+                        onSearch={handleSearch}
                         onStatusChange={handleStatusChange}
                     />
                     {loading ? (
                         <TableSkeleton />
                     ) : (
                         <OrderTable
-                            ordersList={ordersList?.orders || []}
+                            ordersList={filteredOrders || []}
                             isSelfOrder={true}
                             onClick={handleView}
                         />
