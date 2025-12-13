@@ -1,4 +1,3 @@
-// app/api/admin/orders/route.js
 import { NextResponse } from "next/server";
 import { adminDb } from "@/firebaseAdmin";
 import { PAGESIZE } from "@/constants/constants";
@@ -87,17 +86,11 @@ export async function GET(request) {
                 // }
                 
                 // Build order object
-                const order = {
-                    orderId: doc.id,
-                    ...orderData,
-                };
+                const order = { orderId: doc.id, ...orderData };
                 
                 // Update orderStatus with resolved data
                 if (statusData) {
-                    order.orderStatus = {
-                        ...orderData.orderStatus,
-                        status: statusData
-                    };
+                    order.orderStatus = { ...orderData.orderStatus, status: statusData};
                 }
                 
                 // Update paymentMode with resolved data

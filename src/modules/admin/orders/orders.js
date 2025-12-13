@@ -4,22 +4,36 @@ import React, { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { ordersActions } from "./orders.action";
 import { OrderTable } from "./components";
 import { TableSkeleton } from "@/shared";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ORDER_STATUS } from "@/constants/enums";
 
 export const Orders = () => {
 
     const router = useRouter();
     const dispatch = useDispatch();
+    const { orderStatusList } = useSelector((state) => state.orders);
     const [tabIndex, setTabIndex] = useState("customer");
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [ordersList, setOrdersList] = useState([]);
     const [lastDoc, setLastDoc] = useState(null);
     const [hasMore, setHasMore] = useState(true);
+    const excludedIds = [ORDER_STATUS.OUT_FOR_DELIVERY, ORDER_STATUS.PREPARING_ORDER, ORDER_STATUS.CANCELLED_ORDER];
+    const filterStatus = orderStatusList?.filter(item => !excludedIds.includes(item.id));
+    const filterCategories = [
+        {
+            id: 'all',
+            label: 'All Orders',
+            name: 'all orders',
+        },
+        ...(filterStatus || []),
+    ];
+    const [isSelected, setIsSelected] = useState(filterCategories[0]);
 
     const getStatusByTab = (index) => {
         if (index === 'customer') return false
@@ -27,9 +41,25 @@ export const Orders = () => {
         return null
     }
 
-    const fetchOrdersList = (status, lastDocId) => {
+    const fetchOrderStatuses = () => {
+        dispatch(ordersActions.fetchOrderStatuses(
+            {},
+            (response) => {
+                if (response.success) {
+                    console.log(response.data, 'response')
+                }
+                setLoading(false);
+            },
+            (error) => {
+                toast.error(error.error || "Failed to fetch order statuses");
+                setLoading(false);
+            }
+        ));
+    };
+
+    const fetchOrdersList = (isSelfOrder, lastDocId) => {
         dispatch(ordersActions.fetchOrders(
-            {status, lastDocId},
+            {isSelfOrder, lastDocId},
             (response) => {
                 if (response.success === true) {
                     setOrdersList(prev => {
@@ -58,8 +88,17 @@ export const Orders = () => {
     };
 
     useEffect(() => {
+        fetchOrderStatuses();
+    }, [dispatch]);
+
+    useEffect(() => {
         fetchOrdersList(getStatusByTab(tabIndex), null);
     }, [dispatch, tabIndex]);
+
+    const handleStatusChange = (value) => {
+        const selected = filterCategories.find(item => item.id === value);
+        setIsSelected(selected);
+    };
 
     const handleLoadMore = () => {
         if (!hasMore) return;
@@ -70,6 +109,7 @@ export const Orders = () => {
     const handleView = (orderId) => {
         router.push(`/admin/orders/order-details/${orderId}`);
     };
+    console.log(orderStatusList, 'orderStatusList')
 
     return (
         <div>
@@ -79,15 +119,31 @@ export const Orders = () => {
                     <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="customer">Customer Orders</TabsTrigger>
                     <TabsTrigger className="data-[state=active]:bg-brand-green data-[state=active]:text-white text-base cursor-pointer" value="self">Restaurants Self Orders</TabsTrigger>
                 </TabsList>
-                <TabsContent value="customer" className="mt-5">
+                <TabsContent value="customer" className="mt-0">
                     {loading ? (
                         <TableSkeleton />
                     ) : (
-                        <OrderTable
-                            ordersList={ordersList?.orders || []}
-                            isSelfOrder={false}
-                            onClick={handleView}
-                        />
+                        <>
+                            <div className="flex flex-col items-end mb-4">
+                                <Select value={isSelected?.id} onValueChange={handleStatusChange}>
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue>
+                                            {isSelected?.label || "Select order status"}
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {filterCategories?.map((status) => (
+                                            <SelectItem key={status.id} value={status.id}>{status.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <OrderTable
+                                ordersList={ordersList?.orders || []}
+                                isSelfOrder={false}
+                                onClick={handleView}
+                            />
+                        </>
                     )}
                     {!loading && hasMore && (
                         <div className="flex justify-center mt-6">
